@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10.2)
 project("raptordsp")
-add_library(raptordsp SHARED
+add_library(raptordsp STATIC
         src/fast_atan2.cpp
         src/analog/pll.cpp
         src/analog/costas_loop.cpp
@@ -15,11 +15,8 @@ add_library(raptordsp SHARED
         src/filter/builder/builder_lowpass.cpp
         src/filter/builder/builder_rootraised.cpp
         src/misc/wav.cpp
-)
-set_target_properties(raptordsp PROPERTIES PUBLIC_HEADER include)
-target_include_directories(raptordsp PUBLIC include)
-
-target_include_directories(raptordsp PRIVATE C:/Users/Roman/Documents/AndroidRadioBuild/toolchain/${ANDROID_ABI}/include/)
+ "include/raptordsp/demodulator/demod_bcast_fm.h" "src/demodulator/demod_bcast_fm.cpp" "include/raptordsp/demodulator/demod_bcast_fm_stereo.h" "src/demodulator/demod_bcast_fm_stereo.cpp" "include/raptordsp/demodulator/demod.h")
+target_include_directories (raptordsp PUBLIC include)
 
 # Link VOLK
 target_link_libraries(raptordsp volk)
