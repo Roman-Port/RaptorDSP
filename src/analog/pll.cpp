@@ -28,7 +28,12 @@ void raptor_pll::process(raptor_complex* iptr, raptor_complex* optr, int count) 
     int size = count;
 
     while (size-- > 0) {
+#ifdef sincosf
         sincosf(d_phase, &t_imag, &t_real);
+#else
+        t_imag = std::sin(d_phase);
+        t_real = std::cos(d_phase);
+#endif
         *optr++ = raptor_complex(t_real, t_imag);
 
         error = phase_detector(*iptr++, d_phase);

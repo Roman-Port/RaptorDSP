@@ -23,6 +23,11 @@ public:
         len = delay;
     }
 
+    ~raptor_delay_line() {
+        free(buffer);
+        buffer = nullptr;
+    }
+
     void process_one(T input, T* output) {
         //Read output
         *output = buffer[pos];

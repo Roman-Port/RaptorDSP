@@ -63,7 +63,12 @@ raptor_complex* raptor_filter_builder_bandpass::build_taps_complex() {
     float* outputFloat = (float*)output;
     for (int i = 0; i < ntaps; i++)
     {
+#ifdef sincosf
         sincosf(phase, &outputFloat[0], &outputFloat[1]);
+#else
+        outputFloat[0] = std::sin(phase);
+        outputFloat[1] = std::cos(phase);
+#endif
         outputFloat[0] *= baseTaps[i];
         outputFloat[1] *= baseTaps[i];
         outputFloat += 2;

@@ -1,6 +1,7 @@
 #include <raptordsp/digital/clock_recovery_mm.h>
 #include <volk/volk.h>
 #include "interpolator_taps.h"
+#include <cassert>
 
 raptor_clock_recovery_mm::raptor_clock_recovery_mm() {
     //Clear

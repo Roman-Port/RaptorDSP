@@ -1,4 +1,5 @@
 #include <raptordsp/filter/window.h>
+#include <raptordsp/defines.h>
 #include <stdexcept>
 #include <cmath>
 

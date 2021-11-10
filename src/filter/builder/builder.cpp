@@ -1,10 +1,12 @@
 #include <raptordsp/filter/builder/builder.h>
+#include <cassert>
 
 raptor_filter_builder_base::raptor_filter_builder_base(float sampleRate) : sampleRate(sampleRate), ntaps(0), window_type(win_type::WIN_BLACKMAN_HARRIS), param(0), transitionWidth(0) {
 
 }
 
 void raptor_filter_builder_base::automatic_tap_count(float transitionWidth, float attenuation) {
+    assert(transitionWidth > 0);
     this->transitionWidth = transitionWidth;
     int count = (int)(attenuation / (22 * (transitionWidth / sampleRate)));
     if ((count & 1) == 0) //If this is odd, make it even
