@@ -10,7 +10,7 @@ class demod_bcast_fm_stereo : public demod_bcast_fm {
 public:
 	demod_bcast_fm_stereo(size_t buffer_size, float deemphasisTime = DEEMPHASIS_TIME_USA);
 	~demod_bcast_fm_stereo();
-	virtual float configure(float sampleRate);
+	virtual float configure(float sampleRate) override;
 	bool is_stereo_detected();
 
 	bool stereo_enabled;

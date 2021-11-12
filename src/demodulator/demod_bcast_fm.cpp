@@ -53,7 +53,7 @@ int demod_bcast_fm::process(raptor_complex* iqBuffer, int count, float* audioBuf
     baseband_demodulated(count);
 
     //Decimate and filter L + R
-    int audioLength = filter_mono.process(mpx_buffer, audioBufferL, count, 1);
+    int audioLength = filter_mono.process(mpx_buffer, audioBufferL, count);
 
     //Call virtual function
     audio_filtered(audioBufferL, audioBufferR, count, audioLength);
@@ -76,7 +76,7 @@ void demod_bcast_fm::process_deemphasis(float* state, float* audio, int count) {
 float demod_bcast_fm::create_audio_filter(raptor_filter_real* filter, float sampleRate) {
     raptor_filter_builder_lowpass audioFilterBuilder(sampleRate, 15000);
     audioFilterBuilder.automatic_tap_count(1000, 50);
-    filter->configure(audioFilterBuilder.build_taps_real(), audioFilterBuilder.ntaps, audioFilterBuilder.calculate_decimation(&sampleRate));
+    filter->configure(audioFilterBuilder.build_taps_real(), audioFilterBuilder.calculate_decimation(&sampleRate));
     return sampleRate;
 }
 

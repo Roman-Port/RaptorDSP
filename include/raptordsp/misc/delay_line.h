@@ -23,6 +23,13 @@ public:
         len = delay;
     }
 
+    raptor_delay_line(raptor_delay_line const& src) {
+        len = src->len;
+        pos = src->pos;
+        buffer = (T*)malloc(sizeof(T) * len);
+        memcpy(buffer, src->buffer, sizeof(T) * len);
+    }
+
     ~raptor_delay_line() {
         free(buffer);
         buffer = nullptr;

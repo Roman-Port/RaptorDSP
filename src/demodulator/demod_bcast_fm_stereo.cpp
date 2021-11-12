@@ -31,10 +31,10 @@ float demod_bcast_fm_stereo::configure(float sampleRate) {
     //Configure pilot filter
     raptor_filter_builder_bandpass pilotFilterBuilder(sampleRate, 18500, 19500);
     pilotFilterBuilder.automatic_tap_count(1000, 30);
-    pilot_filter.configure(pilotFilterBuilder.build_taps_complex(), pilotFilterBuilder.ntaps, 1);
+    pilot_filter.configure(pilotFilterBuilder.build_taps_complex(), 1);
 
     //Make delay line
-    delay = new raptor_delay_line<float>(pilotFilterBuilder.ntaps - ((pilotFilterBuilder.ntaps - 1) / 2), 0);
+    delay = new raptor_delay_line<float>(pilotFilterBuilder.get_ntaps() - ((pilotFilterBuilder.get_ntaps() - 1) / 2), 0);
 
     //Configure PLL
     pll.configure(/*2 * M_PI * 8 / sampleRate*/ M_PI / 200,
@@ -56,7 +56,7 @@ void demod_bcast_fm_stereo::baseband_demodulated(int count) {
     delay->process(mpx_buffer, count);
 
     //Filter to remove pilot
-    pilot_filter.process(pilot_buffer, pilot_buffer, count, 1);
+    pilot_filter.process(pilot_buffer, pilot_buffer, count);
 
     //Process PLL on pilot
     pll.process(pilot_buffer, pll_buffer, count);
@@ -68,7 +68,7 @@ void demod_bcast_fm_stereo::audio_filtered(float* audioBufferL, float* audioBuff
         audioBufferR[i] = mpx_buffer[i] * std::imag(pll_buffer[i] * pll_buffer[i]);
 
     //Filter and decimate L-R
-    assert(audioLength == filter_stereo.process(audioBufferR, audioBufferR, mpxCount, 1));
+    assert(audioLength == filter_stereo.process(audioBufferR, audioBufferR, mpxCount));
 
     //If stereo is detected, enter recovery. Otherwise, copy L to R as usual
     if (is_stereo_detected() && stereo_enabled) {

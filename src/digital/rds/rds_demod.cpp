@@ -15,13 +15,13 @@ void raptor_rds_demod::configure(float sampleRate) {
     //Set up normal filter
     raptor_filter_builder_lowpass filterBuilder(sampleRate, 2800);
     filterBuilder.automatic_tap_count(300);
-    fmFilter.configure(filterBuilder.build_taps_complex(), filterBuilder.ntaps, filterBuilder.calculate_decimation(&sampleRate));
+    fmFilter.configure(filterBuilder.build_taps_complex(), filterBuilder.calculate_decimation(&sampleRate));
     //__android_log_print(ANDROID_LOG_DEBUG, "NativeRaptorRdsDemod", "RDS sample rate %f, %d taps.", sampleRate, filterBuilder.ntaps);
 
     //Set up raised-root-cosine filter
     raptor_filter_builder_root_raised_cosine rootRaisedCosineFilterBuilder(sampleRate, RDS_SYMBOL_RATE, 1);
-    rootRaisedCosineFilterBuilder.ntaps = 100;
-    rrcFilter.configure(rootRaisedCosineFilterBuilder.build_taps_complex(), rootRaisedCosineFilterBuilder.ntaps, 1);
+    rootRaisedCosineFilterBuilder.set_ntaps(100);
+    rrcFilter.configure(rootRaisedCosineFilterBuilder.build_taps_complex(), 1);
 
     //Set up costas loop
     costasLoop.configure(sampleRate / RDS_SYMBOL_RATE, 2, false);
@@ -54,11 +54,11 @@ int raptor_rds_demod::process(raptor_complex* ptr, unsigned char* output, int co
     volk_32fc_s32fc_x2_rotator_32fc(ptr, ptr, rotatorInc, &rotatorPhase, count);
 
     //Filter to RDS
-    count = fmFilter.process(ptr, ptr, count, 1);
+    count = fmFilter.process(ptr, ptr, count);
     //return count;
 
     //Apply raised-root-cosine filter
-    count = rrcFilter.process(ptr, ptr, count, 1);
+    count = rrcFilter.process(ptr, ptr, count);
 
     //Costas loop
     costasLoop.process(ptr, ptr, count);
