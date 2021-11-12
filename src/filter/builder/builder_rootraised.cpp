@@ -4,11 +4,12 @@ raptor_filter_builder_root_raised_cosine::raptor_filter_builder_root_raised_cosi
 
 }
 
-float* raptor_filter_builder_root_raised_cosine::build_taps_real() {
-    ntaps |= 1; // ensure that ntaps is odd
+void raptor_filter_builder_root_raised_cosine::set_ntaps(int taps) {
+    raptor_filter_builder_base::set_ntaps(taps | 1); // ensure that ntaps is odd
+}
 
+void raptor_filter_builder_root_raised_cosine::build_taps_real_internal(float* taps, int ntaps) {
     double spb = sampleRate / symbolRate; // samples per bit/symbol
-    float* taps = (float*)malloc(ntaps);
     double scale = 0;
     for (int i = 0; i < ntaps; i++) {
         double x1, x2, x3, num, den;
@@ -43,8 +44,6 @@ float* raptor_filter_builder_root_raised_cosine::build_taps_real() {
 
     for (int i = 0; i < ntaps; i++)
         taps[i] = taps[i] * gain / scale;
-
-    return taps;
 }
 
 float raptor_filter_builder_root_raised_cosine::get_max_filter_cutoff() {

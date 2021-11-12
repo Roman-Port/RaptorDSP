@@ -4,11 +4,10 @@ raptor_filter_builder_lowpass::raptor_filter_builder_lowpass(float sampleRate, f
 
 }
 
-float* raptor_filter_builder_lowpass::build_taps_real() {
+void raptor_filter_builder_lowpass::build_taps_real_internal(float* taps, int ntaps) {
     // construct the truncated ideal impulse response
     // [sin(x)/x for the low pass case]
 
-    float* taps = (float*)malloc(sizeof(float) * ntaps);
     float* w = raptor_window_build(window_type, ntaps, param, false);
 
     int M = (ntaps - 1) / 2;
@@ -23,6 +22,8 @@ float* raptor_filter_builder_lowpass::build_taps_real() {
         }
     }
 
+    free(w);
+
     // find the factor to normalize the gain, fmax.
     // For low-pass, gain @ zero freq = 1.0
 
@@ -34,8 +35,6 @@ float* raptor_filter_builder_lowpass::build_taps_real() {
 
     for (int i = 0; i < ntaps; i++)
         taps[i] *= gain;
-
-    return taps;
 }
 
 float raptor_filter_builder_lowpass::get_max_filter_cutoff() {

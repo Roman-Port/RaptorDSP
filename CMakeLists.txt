@@ -7,15 +7,13 @@ add_library(raptordsp STATIC
         src/digital/clock_recovery_mm.cpp
         src/digital/rds/rds_demod.cpp
         src/digital/rds/rds_decode.cpp
-        src/filter/fir/filter_complex.cpp
-        src/filter/fir/filter_real.cpp
         src/filter/window.cpp
         src/filter/builder/builder.cpp
         src/filter/builder/builder_bandpass.cpp
         src/filter/builder/builder_lowpass.cpp
         src/filter/builder/builder_rootraised.cpp
         src/misc/wav.cpp
- "include/raptordsp/demodulator/demod_bcast_fm.h" "src/demodulator/demod_bcast_fm.cpp" "include/raptordsp/demodulator/demod_bcast_fm_stereo.h" "src/demodulator/demod_bcast_fm_stereo.cpp" "include/raptordsp/demodulator/demod.h")
+ "include/raptordsp/demodulator/demod_bcast_fm.h" "src/demodulator/demod_bcast_fm.cpp" "include/raptordsp/demodulator/demod_bcast_fm_stereo.h" "src/demodulator/demod_bcast_fm_stereo.cpp" "include/raptordsp/demodulator/demod.h" "include/raptordsp/filter/fir/filter_base.h" "src/filter/fir/filter_base.cpp" "src/filter/fir/filter_specializations.cpp" "include/raptordsp/filter/filter_taps.h")
 target_include_directories (raptordsp PUBLIC include)
 
 # Link VOLK

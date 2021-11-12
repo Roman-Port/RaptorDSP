@@ -12,11 +12,12 @@ public:
     float highCutoffFreq;
     float gain;
 
-    float* build_taps_real() override;
-    raptor_complex* build_taps_complex() override;
-
 protected:
     float get_max_filter_cutoff() override;
+
+    virtual void build_taps_real_internal(float* buffer, int ntaps) override;
+    virtual void build_taps_complex_internal(raptor_complex* buffer, int ntaps) override;
+    
 
 };
 

@@ -11,10 +11,9 @@ public:
     float cutoffFreq;
     float gain;
 
-    float* build_taps_real() override;
-
 protected:
     float get_max_filter_cutoff() override;
+    virtual void build_taps_real_internal(float* buffer, int ntaps) override;
 
 };
 

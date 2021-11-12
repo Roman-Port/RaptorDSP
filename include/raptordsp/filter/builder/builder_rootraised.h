@@ -12,10 +12,12 @@ public:
     float gain;
     float alpha;
 
-    float* build_taps_real() override;
+    virtual void set_ntaps(int taps) override;
 
 protected:
     float get_max_filter_cutoff() override;
+    virtual void build_taps_real_internal(float* buffer, int ntaps) override;
+    
 
 };
 

@@ -9,8 +9,7 @@ float raptor_filter_builder_bandpass::get_max_filter_cutoff() {
     return highCutoffFreq;
 }
 
-float* raptor_filter_builder_bandpass::build_taps_real() {
-    float* taps = (float*)malloc(sizeof(float) * ntaps);
+void raptor_filter_builder_bandpass::build_taps_real_internal(float* taps, int ntaps) {
     float* w = raptor_window_build(window_type, ntaps, param, false);
 
     int M = (ntaps - 1) / 2;
@@ -25,6 +24,8 @@ float* raptor_filter_builder_bandpass::build_taps_real() {
         }
     }
 
+    free(w);
+
     // find the factor to normalize the gain, fmax.
     // For band-pass, gain @ center freq = 1.0
 
@@ -36,17 +37,15 @@ float* raptor_filter_builder_bandpass::build_taps_real() {
 
     for (int i = 0; i < ntaps; i++)
         taps[i] *= gain;
-
-    return taps;
 }
 
-raptor_complex* raptor_filter_builder_bandpass::build_taps_complex() {
+void raptor_filter_builder_bandpass::build_taps_complex_internal(raptor_complex* output, int ntaps) {
     //Construct base filter
     raptor_filter_builder_lowpass baseBuilder(sampleRate, (highCutoffFreq - lowCutoffFreq) / 2);
-    baseBuilder.ntaps = ntaps;
+    baseBuilder.set_ntaps(ntaps);
     baseBuilder.window_type = window_type;
     baseBuilder.param = param;
-    float* baseTaps = baseBuilder.build_taps_real();
+    raptor_filter_taps<float> baseTaps = baseBuilder.build_taps_real();
 
     //Calculate freq
     float freq = M_PI * (highCutoffFreq + lowCutoffFreq) / sampleRate;
@@ -59,7 +58,6 @@ raptor_complex* raptor_filter_builder_bandpass::build_taps_complex() {
         phase = -freq / 2 * ((1 + 2 * ntaps) >> 1);
 
     //Generate
-    raptor_complex* output = (raptor_complex*)malloc(sizeof(raptor_complex) * ntaps);
     float* outputFloat = (float*)output;
     for (int i = 0; i < ntaps; i++)
     {
@@ -69,14 +67,9 @@ raptor_complex* raptor_filter_builder_bandpass::build_taps_complex() {
         outputFloat[0] = std::sin(phase);
         outputFloat[1] = std::cos(phase);
 #endif
-        outputFloat[0] *= baseTaps[i];
-        outputFloat[1] *= baseTaps[i];
+        outputFloat[0] *= baseTaps.read(i);
+        outputFloat[1] *= baseTaps.read(i);
         outputFloat += 2;
         phase += freq;
     }
-
-    //Clean up
-    free(baseTaps);
-
-    return output;
 }
