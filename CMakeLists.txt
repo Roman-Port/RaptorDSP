@@ -13,7 +13,7 @@ add_library(raptordsp STATIC
         src/filter/builder/builder_lowpass.cpp
         src/filter/builder/builder_rootraised.cpp
         src/misc/wav.cpp
- "include/raptordsp/demodulator/demod_bcast_fm.h" "src/demodulator/demod_bcast_fm.cpp" "include/raptordsp/demodulator/demod_bcast_fm_stereo.h" "src/demodulator/demod_bcast_fm_stereo.cpp" "include/raptordsp/demodulator/demod.h" "include/raptordsp/filter/fir/filter_base.h" "src/filter/fir/filter_base.cpp" "src/filter/fir/filter_specializations.cpp" "include/raptordsp/filter/filter_taps.h")
+ "include/raptordsp/demodulator/demod_bcast_fm.h" "src/demodulator/demod_bcast_fm.cpp" "include/raptordsp/demodulator/demod_bcast_fm_stereo.h" "src/demodulator/demod_bcast_fm_stereo.cpp" "include/raptordsp/demodulator/demod.h" "include/raptordsp/filter/fir/filter_base.h" "src/filter/fir/filter_base.cpp" "src/filter/fir/filter_specializations.cpp" "include/raptordsp/filter/filter_taps.h" "include/raptordsp/digital/clock_recovery_mm_complex.h" "src/digital/clock_recovery_mm_complex.cpp" "include/raptordsp/misc/consumption_queue.h" "src/misc/consumption_queue.cpp" "include/raptordsp/analog/agc.h" "src/analog/agc.cpp")
 target_include_directories (raptordsp PUBLIC include)
 
 # Link VOLK
