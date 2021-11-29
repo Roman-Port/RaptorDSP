@@ -1,15 +1,11 @@
 #include <cassert>
+#include <stdint.h>
+#include <cstring>
 #include <raptordsp/misc/wav.h>
 
 #define WRITE_TAG(buffer, offset, tag) buffer[offset++] = tag[0]; buffer[offset++] = tag[1]; buffer[offset++] = tag[2]; buffer[offset++] = tag[3];
 #define WRITE_INT32(buffer, offset, value) *((int*)&buffer[offset]) = value; offset += 4;
 #define WRITE_INT16(buffer, offset, value) *((short*)&buffer[offset]) = value; offset += 2;
-
-#define READ_TAG(buffer, offset, result) result[0] = buffer[offset++]; result[1] = buffer[offset++]; result[2] = buffer[offset++]; result[3] = buffer[offset++];
-#define READ_INT32(buffer, offset, result) result = *((int*)&buffer[offset]); offset += 4;
-#define READ_INT16(buffer, offset, result) result = *((short*)&buffer[offset]); offset += 2;
-
-#define COMPARE_TAG(tagA, tagB) ((tagA[0] == tagB[0]) && (tagA[1] == tagB[1]) && (tagA[2] == tagB[2]) && (tagA[3] == tagB[3]))
 
 void create_wav_header(unsigned char buffer[WAV_HEADER_SIZE], int length, short channels, int sampleRate, int bitsPerSample) {
 
@@ -35,41 +31,42 @@ void create_wav_header(unsigned char buffer[WAV_HEADER_SIZE], int length, short 
     assert(offset == WAV_HEADER_SIZE);
 }
 
-bool read_wav_header(unsigned char buffer[WAV_HEADER_SIZE], wav_header_data* output) {
-    //Init all values
-    char tagRiff[4];
-    int length;
-    char tagWave[4];
-    char tagFmt[4];
-    int fmtLength;
-    short formatTag;
-    short channels;
-    int sampleRate;
-    int avgBytesPerSec;
-    short blockAlign;
-    short bitsPerSample;
-    char tagData[4];
-    int dataLen;
+template <class T>
+T _wav_read(uint8_t** buffer, size_t* remaining) {
+    //Make sure we have enough space remaining
+    assert(*remaining >= sizeof(T));
 
     //Read
-    int offset = 0;
-    READ_TAG(buffer, offset, tagRiff);
-    READ_INT32(buffer, offset, length);
-    READ_TAG(buffer, offset, tagWave);
-    READ_TAG(buffer, offset, tagFmt);
-    READ_INT32(buffer, offset, fmtLength);
-    READ_INT16(buffer, offset, formatTag);
-    READ_INT16(buffer, offset, channels);
-    READ_INT32(buffer, offset, sampleRate);
-    READ_INT32(buffer, offset, avgBytesPerSec);
-    READ_INT16(buffer, offset, blockAlign);
-    READ_INT16(buffer, offset, bitsPerSample);
-    READ_TAG(buffer, offset, tagData);
-    READ_INT32(buffer, offset, dataLen);
-    assert(offset == WAV_HEADER_SIZE);
+    T value;
+    memcpy(&value, *buffer, sizeof(T));
+
+    //Update state
+    (*buffer) += sizeof(T);
+    (*remaining) -= sizeof(T);
+
+    return value;
+}
+
+bool read_wav_header(uint8_t buffer[WAV_HEADER_SIZE], wav_header_data* output) {
+    //Read all
+    size_t remaining = WAV_HEADER_SIZE;
+    uint32_t tagRiff            = _wav_read<uint32_t>(&buffer, &remaining);
+    int32_t length              = _wav_read<int32_t>(&buffer, &remaining);
+    uint32_t tagWave            = _wav_read<uint32_t>(&buffer, &remaining);
+    uint32_t tagFmt             = _wav_read<uint32_t>(&buffer, &remaining);
+    int32_t fmtLength           = _wav_read<int32_t>(&buffer, &remaining);
+    int16_t formatTag           = _wav_read<int16_t>(&buffer, &remaining);
+    int16_t channels            = _wav_read<int16_t>(&buffer, &remaining);
+    int32_t sampleRate          = _wav_read<int32_t>(&buffer, &remaining);
+    int32_t avgBytesPerSec      = _wav_read<int32_t>(&buffer, &remaining);
+    int16_t blockAlign          = _wav_read<int16_t>(&buffer, &remaining);
+    int16_t bitsPerSample       = _wav_read<int16_t>(&buffer, &remaining);
+    uint32_t tagData            = _wav_read<uint32_t>(&buffer, &remaining);
+    int32_t dataLen             = _wav_read<int32_t>(&buffer, &remaining);
+    assert(remaining == 0);
 
     //Validate tags
-    if(!COMPARE_TAG(tagRiff, "RIFF") || !COMPARE_TAG(tagWave, "WAVE") || !COMPARE_TAG(tagFmt, "fmt "))
+    if(tagRiff != 1179011410 || tagWave != 1163280727 || tagFmt != 544501094)
         return false;
 
     //Parse
@@ -77,6 +74,6 @@ bool read_wav_header(unsigned char buffer[WAV_HEADER_SIZE], wav_header_data* out
     output->length = dataLen;
     output->sample_rate = sampleRate;
     output->bits_per_sample = bitsPerSample;
-
+    
     return true;
 }

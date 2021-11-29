@@ -53,6 +53,21 @@ public:
         cv.notify_one();
     }
 
+    /// <summary>
+    /// Writes to the circular buffer only if there's enough space. Does not overwrite items or extend the buffer.
+    /// </summary>
+    /// <param name="input"></param>
+    /// <param name="count"></param>
+    /// <param name="allOrNothing">If set to true, no items will be written unless there's enough space to write EVERYTHING.</param>
+    /// <returns></returns>
+    int try_write(T* input, int count, bool allOrNothing) {
+        m.lock();
+        count = underlying.try_write(input, count, allOrNothing);
+        m.unlock();
+        cv.notify_one();
+        return count;
+    }
+
     /***
      * Reads out of the circular buffer.
      * @param output The buffer to copy to.

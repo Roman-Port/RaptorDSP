@@ -130,6 +130,28 @@ public:
         }
     }
 
+    /// <summary>
+    /// Writes to the circular buffer only if there's enough space. Does not overwrite items or extend the buffer.
+    /// </summary>
+    /// <param name="input"></param>
+    /// <param name="incoming"></param>
+    /// <param name="allOrNothing">If set to true, no items will be written unless there's enough space to write EVERYTHING.</param>
+    /// <returns></returns>
+    int try_write(T* input, int incoming, bool allOrNothing) {
+        //Make sure there's enough space for everything if we set allOrNothing
+        if (allOrNothing && incoming > get_free())
+            return 0;
+
+        //Limit the number of incoming items to the size of the buffer
+        if (incoming > get_free())
+            incoming = get_free();
+
+        //Write these as normal
+        write(input, incoming, false);
+
+        return incoming;
+    }
+
     /***
      * Reads out of the circular buffer.
      * @param output The buffer to copy to.
