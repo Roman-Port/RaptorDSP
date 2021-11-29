@@ -1,6 +1,5 @@
 #include <raptordsp/demodulator/demod_bcast_fm_stereo.h>
 #include <raptordsp/filter/builder/builder_bandpass.h>
-#include <cassert>
 #include <complex>
 
 demod_bcast_fm_stereo::demod_bcast_fm_stereo(size_t buffer_size, float deemphasisTime) : demod_bcast_fm(buffer_size, deemphasisTime),
@@ -20,7 +19,7 @@ demod_bcast_fm_stereo::~demod_bcast_fm_stereo() {
     pll_buffer = nullptr;
 
     //Destroy delay line
-    delete delay;
+    delete(delay);
     delay = nullptr;
 }
 
@@ -42,7 +41,7 @@ float demod_bcast_fm_stereo::configure(float sampleRate) {
         2 * M_PI * (19000 - 4) / sampleRate);
 
     //Configure our difference audio filter
-    assert(audioSampleRate == create_audio_filter(&filter_stereo, sampleRate));
+    create_audio_filter(&filter_stereo, sampleRate);
 
     return audioSampleRate;
 }
@@ -68,7 +67,7 @@ void demod_bcast_fm_stereo::audio_filtered(float* audioBufferL, float* audioBuff
         audioBufferR[i] = mpx_buffer[i] * std::imag(pll_buffer[i] * pll_buffer[i]);
 
     //Filter and decimate L-R
-    assert(audioLength == filter_stereo.process(audioBufferR, audioBufferR, mpxCount));
+    filter_stereo.process(audioBufferR, audioBufferR, mpxCount);
 
     //If stereo is detected, enter recovery. Otherwise, copy L to R as usual
     if (is_stereo_detected() && stereo_enabled) {
