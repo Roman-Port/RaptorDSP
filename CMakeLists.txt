@@ -17,4 +17,4 @@ add_library(raptordsp STATIC
 target_include_directories (raptordsp PUBLIC include)
 
 # Link VOLK
-target_link_libraries(raptordsp volk)
+target_link_libraries(raptordsp Volk::volk)
