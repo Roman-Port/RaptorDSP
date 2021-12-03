@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.10.2)
 project("raptordsp")
+
+find_package(volk CONFIG REQUIRED)
+
 add_library(raptordsp STATIC
         src/fast_atan2.cpp
         src/analog/pll.cpp
