@@ -3,6 +3,7 @@
 #include <raptordsp/misc/wav.h>
 #include <raptordsp/io/sample_converter.h>
 #include <raptordsp/defines.h>
+#include <stdint.h>
 
 class raptor_wav_reader {
 
@@ -15,8 +16,8 @@ public:
 	int get_channels() { return info.channels; }
 	int get_bits_per_sample() { return info.bits_per_sample; }
 
-	fpos_t get_position();
-	void set_position(fpos_t pos);
+	int64_t get_position();
+	void set_position(int64_t pos);
 
 	inline size_t read(float* ptr, size_t count) { return converter->read(ptr, count, file); }
 	inline size_t read(raptor_complex* ptr, size_t count) { return read((float*)ptr, count * 2) / 2; }

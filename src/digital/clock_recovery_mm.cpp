@@ -2,6 +2,7 @@
 #include <volk/volk.h>
 #include "interpolator_taps.h"
 #include <cassert>
+#include <cstring>
 
 raptor_clock_recovery_mm::raptor_clock_recovery_mm() {
     //Clear

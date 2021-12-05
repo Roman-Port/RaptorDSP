@@ -53,15 +53,13 @@ raptor_wav_reader::~raptor_wav_reader() {
 	}
 }
 
-fpos_t raptor_wav_reader::get_position() {
-	fpos_t pos;
-	if (fgetpos(file, &pos) != 0)
-		throw std::runtime_error("File IO error.");
+int64_t raptor_wav_reader::get_position() {
+	int64_t pos = ftell(file);
 	return (pos - WAV_HEADER_SIZE) / bytes_per_sample;
 }
 
-void raptor_wav_reader::set_position(fpos_t pos) {
+void raptor_wav_reader::set_position(int64_t pos) {
 	pos = (pos * bytes_per_sample) + WAV_HEADER_SIZE;
-	if (fsetpos(file, &pos) != 0)
+	if (fseek(file, pos, SEEK_END) != 0)
 		throw std::runtime_error("File IO error.");
 }
