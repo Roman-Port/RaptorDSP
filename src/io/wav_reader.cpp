@@ -1,17 +1,12 @@
 #include <raptordsp/io/wav_reader.h>
 #include <stdexcept>
 
-raptor_wav_reader::raptor_wav_reader(const char* filename, size_t bufferSize) :
-	file(nullptr),
+raptor_wav_reader::raptor_wav_reader(FILE* file, size_t bufferSize) :
+	file(file),
 	converter(nullptr),
 	buffer_size(bufferSize),
 	bytes_per_sample(0)
 {
-	//Open the file
-	file = fopen(filename, "rb");
-	if (file == nullptr)
-		throw std::runtime_error("Unable to open WAV file.");
-
 	//Read the WAV header
 	uint8_t header[WAV_HEADER_SIZE];
 	if (fread(header, 1, sizeof(header), file) != sizeof(header))
@@ -34,18 +29,15 @@ raptor_wav_reader::raptor_wav_reader(const char* filename, size_t bufferSize) :
 	bytes_per_sample = info.channels * (info.bits_per_sample / 8);
 }
 
-raptor_wav_reader::raptor_wav_reader(raptor_wav_reader const& src)
+raptor_wav_reader::raptor_wav_reader(raptor_wav_reader const& src) :
+	file(src.file),
+	converter(raptor_sample_converter::create_converter(src.info.bits_per_sample, src.buffer_size * src.info.channels)),
+	buffer_size(src.buffer_size),
+	bytes_per_sample(src.bytes_per_sample)
 {
-	throw std::runtime_error("Cloning of the WAV file reader is not permitted.");
 }
 
 raptor_wav_reader::~raptor_wav_reader() {
-	//Close file
-	if (file != nullptr) {
-		fclose(file);
-		file = nullptr;
-	}
-
 	//Free the converter
 	if (converter != nullptr) {
 		delete(converter);

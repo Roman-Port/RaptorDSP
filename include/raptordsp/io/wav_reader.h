@@ -8,7 +8,7 @@
 class raptor_wav_reader {
 
 public:
-	raptor_wav_reader(const char* filename, size_t bufferSize);
+	raptor_wav_reader(FILE* file, size_t bufferSize);
 	raptor_wav_reader(raptor_wav_reader const& src);
 	~raptor_wav_reader();
 

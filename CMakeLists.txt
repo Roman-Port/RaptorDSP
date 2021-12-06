@@ -3,7 +3,7 @@ project("raptordsp")
 set(installhelper_version 0.1.0)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-find_package(volk CONFIG REQUIRED)
+find_package(Volk CONFIG REQUIRED)
 
 add_library(raptordsp SHARED
         src/fast_atan2.cpp
