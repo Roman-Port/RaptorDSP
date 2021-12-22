@@ -48,14 +48,14 @@ void raptor_filter_builder_base::build_taps_complex_internal(raptor_complex* con
     throw std::runtime_error("Complex taps are not supported by this builder.");
 }
 
-raptor_filter_taps<float> raptor_filter_builder_base::build_taps_real() {
+raptor_filter_taps<float>* raptor_filter_builder_base::build_taps_real() {
     float* buffer = (float*)malloc(sizeof(float) * ntaps);
     build_taps_real_internal(buffer, ntaps);
-    return raptor_filter_taps<float>(buffer, ntaps);
+    return new raptor_filter_taps<float>(buffer, ntaps);
 }
 
-raptor_filter_taps<raptor_complex> raptor_filter_builder_base::build_taps_complex() {
+raptor_filter_taps<raptor_complex>* raptor_filter_builder_base::build_taps_complex() {
     raptor_complex* buffer = (raptor_complex*)malloc(sizeof(raptor_complex) * ntaps);
     build_taps_complex_internal(buffer, ntaps);
-    return raptor_filter_taps<raptor_complex>(buffer, ntaps);
+    return new raptor_filter_taps<raptor_complex>(buffer, ntaps);
 }

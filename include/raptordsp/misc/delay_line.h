@@ -1,5 +1,6 @@
-#ifndef ANDROIDSDRTUNER_DELAY_LINE_H
-#define ANDROIDSDRTUNER_DELAY_LINE_H
+#pragma once
+
+#include <raptordsp/defines.h>
 
 template<typename T>
 class raptor_delay_line {
@@ -56,4 +57,5 @@ public:
 
 };
 
-#endif //ANDROIDSDRTUNER_DELAY_LINE_H
+typedef raptor_delay_line<float> raptor_delay_line_float;
+typedef raptor_delay_line<raptor_complex> raptor_delay_line_complex;

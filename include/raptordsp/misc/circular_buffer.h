@@ -1,5 +1,4 @@
-#ifndef ANDROIDSDRTUNER_CIRCULAR_BUFFER_H
-#define ANDROIDSDRTUNER_CIRCULAR_BUFFER_H
+#pragma once
 
 #include <raptordsp/defines.h>
 
@@ -187,4 +186,5 @@ private:
 
 };
 
-#endif //ANDROIDSDRTUNER_CIRCULAR_BUFFER_H
+typedef circular_buffer<float> circular_buffer_float;
+typedef circular_buffer<raptor_complex> circular_buffer_complex;

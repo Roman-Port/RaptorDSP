@@ -10,7 +10,7 @@ public:
     raptor_filter();
     raptor_filter(raptor_filter const& src);
     ~raptor_filter();
-    void configure(raptor_filter_taps<TAP_T> taps, int decimation);
+    void configure(raptor_filter_taps<TAP_T>* taps, int decimation);
     int process(const IN_T* input, OUT_T* output, int count);
 
 private:

@@ -38,9 +38,9 @@ raptor_filter<IN_T, OUT_T, TAP_T>::~raptor_filter() {
 }
 
 template <class IN_T, class OUT_T, class TAP_T>
-void raptor_filter<IN_T, OUT_T, TAP_T>::configure(raptor_filter_taps<TAP_T> taps, int decimation) {
+void raptor_filter<IN_T, OUT_T, TAP_T>::configure(raptor_filter_taps<TAP_T>* taps, int decimation) {
     //Apply settings
-    this->ntaps = taps.get_ntaps();
+    this->ntaps = taps->get_ntaps();
     this->decimation = decimation;
 
     //Reset
@@ -53,7 +53,7 @@ void raptor_filter<IN_T, OUT_T, TAP_T>::configure(raptor_filter_taps<TAP_T> taps
     RECREATE_BUFFER(input_buffer, IN_T, ntaps * 2, alignment);
 
     //Copy taps
-    taps.copy_to(taps_buffer);
+    taps->copy_to(taps_buffer);
 
     //Clear input
     memset(input_buffer, 0, this->ntaps * 2 * sizeof(IN_T));

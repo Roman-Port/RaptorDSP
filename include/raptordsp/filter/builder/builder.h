@@ -21,8 +21,8 @@ public:
     virtual void set_ntaps(int tap);
     int calculate_decimation(float* actualOutputSampleRate);
 
-    raptor_filter_taps<float> build_taps_real();
-    raptor_filter_taps<raptor_complex> build_taps_complex();
+    raptor_filter_taps<float>* build_taps_real();
+    raptor_filter_taps<raptor_complex>* build_taps_complex();
 
 protected:
     float transitionWidth;

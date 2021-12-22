@@ -1,3 +1,7 @@
+#pragma once
+
+#include <raptordsp/defines.h>
+
 template <class T>
 class raptor_consumption_queue {
 
@@ -19,3 +23,6 @@ private:
 	void extend_buffer();
 
 };
+
+typedef raptor_consumption_queue<float> raptor_consumption_queue_float;
+typedef raptor_consumption_queue<raptor_complex> raptor_consumption_queue_complex;

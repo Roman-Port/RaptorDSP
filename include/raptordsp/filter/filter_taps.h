@@ -1,5 +1,6 @@
 #pragma once
 
+#include <raptordsp/defines.h>
 #include <cstring>
 #include <cassert>
 
@@ -47,3 +48,6 @@ private:
 	int ntaps;
 
 };
+
+typedef raptor_filter_taps<float> raptor_filter_taps_float;
+typedef raptor_filter_taps<raptor_complex> raptor_filter_taps_complex;

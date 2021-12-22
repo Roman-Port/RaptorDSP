@@ -1,5 +1,4 @@
-#ifndef ANDROIDSDRTUNER_CIRCULAR_BUFFER_SAFE_H
-#define ANDROIDSDRTUNER_CIRCULAR_BUFFER_SAFE_H
+#pragma once
 
 #include <raptordsp/misc/circular_buffer.h>
 #include <mutex>
@@ -125,4 +124,5 @@ private:
 
 };
 
-#endif //ANDROIDSDRTUNER_CIRCULAR_BUFFER_SAFE_H
+typedef circular_buffer_safe<float> circular_buffer_safe_float;
+typedef circular_buffer_safe<raptor_complex> circular_buffer_safe_complex;

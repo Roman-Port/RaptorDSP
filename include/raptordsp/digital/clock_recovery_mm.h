@@ -1,7 +1,6 @@
-#ifndef RAPTORDSP_DIGITAL_CLOCKRECOVERYMM
-#define RAPTORDSP_DIGITAL_CLOCKRECOVERYMM
+#pragma once
 
-#include "../defines.h"
+#include <raptordsp/defines.h>
 
 class raptor_clock_recovery_mm {
 
@@ -54,5 +53,3 @@ private:
     }
 
 };
-
-#endif
