@@ -33,9 +33,10 @@ write_basic_package_version_file(
   COMPATIBILITY AnyNewerVersion
 )
 
-export(EXPORT ${installhelper_name}Targets
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/${installhelper_name}/${installhelper_name}Targets.cmake"
-)
+#export(EXPORT ${installhelper_name}Targets
+#  FILE "${CMAKE_CURRENT_BINARY_DIR}/${installhelper_name}/${installhelper_name}Targets.cmake"
+#)
+export(PACKAGE ${installhelper_name})
 configure_file(cmake/${installhelper_name}Config.cmake
   "${CMAKE_CURRENT_BINARY_DIR}/${installhelper_name}/${installhelper_name}Config.cmake"
   COPYONLY
