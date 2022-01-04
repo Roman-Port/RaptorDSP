@@ -15,29 +15,19 @@ public:
      * Creates a circular array.
      * @param count The initial float count.
      */
-    circular_buffer_safe(int count) : underlying(count), cancel(false) {
-
-    }
+    circular_buffer_safe(int count);
 
     /***
      * Resizes the buffer, optionally keeping the data. Expensive operation.
      * @param count The new size of the buffer, in floats.
      * @param keepContents If true, the old contents are copied to the new buffer and it can be used seamlessly. Otherwise, contents are lost and the buffer is reset.
      */
-    void resize(int count, bool keepContents) {
-        m.lock();
-        underlying.resize(count, keepContents);
-        m.unlock();
-    }
+    void resize(int count, bool keepContents);
 
     /***
      * Resets the buffer, removing all content in it.
      */
-    void clear() {
-        m.lock();
-        underlying.clear();
-        m.unlock();
-    }
+    void clear();
 
     /***
      * Writes to the circular buffer.
@@ -45,12 +35,7 @@ public:
      * @param count The number of items to write, in floats.
      * @param extend If true, the buffer will seamlessly expand to fit all the items. Otherwise, existing items will be overwritten.
      */
-    void write(T* input, int count, bool extend) {
-        m.lock();
-        underlying.write(input, count, extend);
-        m.unlock();
-        cv.notify_one();
-    }
+    void write(T* input, int count, bool extend);
 
     /// <summary>
     /// Writes to the circular buffer only if there's enough space. Does not overwrite items or extend the buffer.
@@ -59,13 +44,7 @@ public:
     /// <param name="count"></param>
     /// <param name="allOrNothing">If set to true, no items will be written unless there's enough space to write EVERYTHING.</param>
     /// <returns></returns>
-    int try_write(T* input, int count, bool allOrNothing) {
-        m.lock();
-        count = underlying.try_write(input, count, allOrNothing);
-        m.unlock();
-        cv.notify_one();
-        return count;
-    }
+    int try_write(T* input, int count, bool allOrNothing);
 
     /***
      * Reads out of the circular buffer.
@@ -73,12 +52,7 @@ public:
      * @param count The number of items to read at MAXIMUM, in floats.
      * @return The actual number of items read, in floats.
      */
-    int read(T* output, int count) {
-        m.lock();
-        int read = underlying.read(output, count);
-        m.unlock();
-        return read;
-    }
+    int read(T* output, int count);
 
     /***
      * Reads out of the circular buffer. Hangs until samples are available.
@@ -86,35 +60,12 @@ public:
      * @param count The number of items to read at MAXIMUM, in floats.
      * @return The actual number of items read, in floats.
      */
-    int read_wait(T* output, int count) {
-        //Wait
-        std::unique_lock<std::mutex> lk(m);
-        while (!cancel && underlying.get_used() == 0)
-            cv.wait(lk);
-
-        //Perform the read
-        int read;
-        if (!cancel)
-            read = underlying.read(output, count);
-        else
-            read = 0;
-
-        //Reset cancellation
-        cancel = false;
-
-        //Unlock
-        lk.unlock();
-
-        return read;
-    }
+    int read_wait(T* output, int count);
 
     /***
      * Cancels an ongoing read that we're waiting on.
      */
-    void read_cancel() {
-        cancel = true;
-        cv.notify_one();
-    }
+    void read_cancel();
 
 private:
     circular_buffer<T> underlying;

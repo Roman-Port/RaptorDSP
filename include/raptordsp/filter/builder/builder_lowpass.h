@@ -1,5 +1,4 @@
-#ifndef RAPTORDSP_FILTER_BUILDER_LOWPASS
-#define RAPTORDSP_FILTER_BUILDER_LOWPASS
+#pragma once
 
 #include "builder.h"
 
@@ -16,5 +15,3 @@ protected:
     virtual void build_taps_real_internal(float* buffer, int ntaps) override;
 
 };
-
-#endif

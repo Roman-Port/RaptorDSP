@@ -55,3 +55,28 @@ void raptor_wav_reader::set_position(int64_t pos) {
 	if (fseek(file, pos, SEEK_END) != 0)
 		throw std::runtime_error("File IO error.");
 }
+
+int raptor_wav_reader::get_sample_rate()
+{
+	return info.sample_rate;
+}
+
+int raptor_wav_reader::get_channels()
+{
+	return info.channels;
+}
+
+int raptor_wav_reader::get_bits_per_sample()
+{
+	return info.bits_per_sample;
+}
+
+size_t raptor_wav_reader::read(float* ptr, size_t count)
+{
+	return converter->read(ptr, count, file);
+}
+
+size_t raptor_wav_reader::read(raptor_complex* ptr, size_t count)
+{
+	return read((float*)ptr, count * 2) / 2;
+}

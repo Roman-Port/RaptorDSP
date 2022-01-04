@@ -8,10 +8,7 @@ class raptor_pll {
 public:
     void configure(float loop_bw, float max_freq, float min_freq);
     void process(raptor_complex* iptr, raptor_complex* optr, int count);
-
-    inline float get_avg_error() {
-        return d_avg_error;
-    }
+    float get_avg_error();
 
 private:
 

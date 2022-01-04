@@ -1,5 +1,4 @@
-#ifndef RAPTORDSP_FILTER_BUILDER_BANDPASS
-#define RAPTORDSP_FILTER_BUILDER_BANDPASS
+#pragma once
 
 #include "builder.h"
 
@@ -20,5 +19,3 @@ protected:
     
 
 };
-
-#endif

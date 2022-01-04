@@ -1,5 +1,4 @@
-#ifndef RAPTORDSP_FILTER_BUILDER_ROOTRAISED
-#define RAPTORDSP_FILTER_BUILDER_ROOTRAISED
+#pragma once
 
 #include "builder.h"
 
@@ -20,5 +19,3 @@ protected:
     
 
 };
-
-#endif

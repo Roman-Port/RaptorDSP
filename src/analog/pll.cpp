@@ -22,6 +22,10 @@ void raptor_pll::configure(float loop_bw, float max_freq, float min_freq) {
     d_alpha_inverse = 1 - d_alpha;
 }
 
+float raptor_pll::get_avg_error() {
+    return d_avg_error;
+}
+
 void raptor_pll::process(raptor_complex* iptr, raptor_complex* optr, int count) {
     float error;
     float t_imag, t_real;

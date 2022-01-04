@@ -1,5 +1,4 @@
-#ifndef RAPTORDSP_FILTER_BUILDER
-#define RAPTORDSP_FILTER_BUILDER
+#pragma once
 
 #include "../window.h"
 #include "../../defines.h"
@@ -38,5 +37,3 @@ private:
     int ntaps;
 
 };
-
-#endif

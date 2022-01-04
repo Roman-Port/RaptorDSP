@@ -1,5 +1,4 @@
-#ifndef RAPTORDSP_FILTER_WINDOW
-#define RAPTORDSP_FILTER_WINDOW
+#pragma once
 
 enum win_type {
     WIN_NONE = -1,       //!< don't use a window
@@ -29,5 +28,3 @@ enum win_type {
 };
 
 float* raptor_window_build(win_type type, int ntaps, double param, const bool normalize);
-
-#endif

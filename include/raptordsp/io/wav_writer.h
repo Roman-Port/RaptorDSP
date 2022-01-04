@@ -12,8 +12,8 @@ public:
 	raptor_wav_writer(raptor_wav_writer const& src);
 	~raptor_wav_writer();
 
-	inline size_t write(const float* ptr, size_t count) { return converter->write(ptr, count, file); }
-	inline size_t write(const raptor_complex* ptr, size_t count) { return write((const float*)ptr, count * 2) / 2; }
+	size_t write(const float* ptr, size_t count);
+	size_t write(const raptor_complex* ptr, size_t count);
 
 private:
 	int sampleRate;
