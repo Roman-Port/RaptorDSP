@@ -1,4 +1,5 @@
 #include <raptordsp/misc/circular_buffer_safe.h>
+#include <cstring>
 
 template <typename T>
 circular_buffer_safe<T>::circular_buffer_safe(int count) : underlying(count), cancel(false) {

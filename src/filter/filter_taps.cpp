@@ -1,4 +1,5 @@
 #include <raptordsp/filter/filter_taps.h>
+#include <cstring>
 
 template <class T>
 raptor_filter_taps<T>::raptor_filter_taps(T* buffer, int ntaps) {

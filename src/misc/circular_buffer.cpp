@@ -2,6 +2,7 @@
 
 #include <raptordsp/misc/circular_buffer.h>
 #include <cassert>
+#include <cstring>
 
 template <typename T>
 circular_buffer<T>::circular_buffer(int count) : buffer(nullptr), use(0), size(count), pos_read(0), pos_write(0) {

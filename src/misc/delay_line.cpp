@@ -1,4 +1,5 @@
 #include <raptordsp/misc/delay_line.h>
+#include <cstring>
 
 template<typename T>
 raptor_delay_line<T>::raptor_delay_line(int delay, T defaultValue) {
