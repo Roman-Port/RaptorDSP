@@ -2,7 +2,6 @@
 
 #include "../window.h"
 #include "../../defines.h"
-#include <raptordsp/filter/fir/filter_base.h>
 #include <raptordsp/filter/filter_taps.h>
 
 class raptor_filter_builder_base {
@@ -20,8 +19,8 @@ public:
     virtual void set_ntaps(int tap);
     int calculate_decimation(float* actualOutputSampleRate);
 
-    raptor_filter_taps<float>* build_taps_real();
-    raptor_filter_taps<raptor_complex>* build_taps_complex();
+    void build_taps_real(float* output);
+    void build_taps_complex(raptor_complex* output);
 
 protected:
     float transitionWidth;

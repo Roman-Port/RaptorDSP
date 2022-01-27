@@ -41,11 +41,14 @@ void raptor_filter_builder_bandpass::build_taps_real_internal(float* taps, int n
 
 void raptor_filter_builder_bandpass::build_taps_complex_internal(raptor_complex* output, int ntaps) {
     //Construct base filter
-    raptor_filter_builder_lowpass baseBuilder(sampleRate, (highCutoffFreq - lowCutoffFreq) / 2);
-    baseBuilder.set_ntaps(ntaps);
-    baseBuilder.window_type = window_type;
-    baseBuilder.param = param;
-    raptor_filter_taps<float>* baseTaps = baseBuilder.build_taps_real();
+    float* baseTaps = (float*)malloc(sizeof(float) * ntaps);
+    {
+        raptor_filter_builder_lowpass baseBuilder(sampleRate, (highCutoffFreq - lowCutoffFreq) / 2);
+        baseBuilder.set_ntaps(ntaps);
+        baseBuilder.window_type = window_type;
+        baseBuilder.param = param;
+        baseBuilder.build_taps_real(baseTaps);
+    }
 
     //Calculate freq
     float freq = M_PI * (highCutoffFreq + lowCutoffFreq) / sampleRate;
@@ -67,12 +70,12 @@ void raptor_filter_builder_bandpass::build_taps_complex_internal(raptor_complex*
         outputFloat[0] = std::sin(phase);
         outputFloat[1] = std::cos(phase);
 #endif
-        outputFloat[0] *= baseTaps->read(i);
-        outputFloat[1] *= baseTaps->read(i);
+        outputFloat[0] *= baseTaps[i];
+        outputFloat[1] *= baseTaps[i];
         outputFloat += 2;
         phase += freq;
     }
 
     //Clean up
-    delete(baseTaps);
+    free(baseTaps);
 }

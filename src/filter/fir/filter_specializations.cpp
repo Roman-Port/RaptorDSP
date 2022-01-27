@@ -16,6 +16,11 @@ void raptor_filter_fff::compute(float* result, const float* input, const float* 
 	volk_32f_x2_dot_prod_32f(result, input, taps, num_points);
 }
 
+template <>
+void raptor_filter_fff::set_taps_from_builder(raptor_filter_builder_base* builder) {
+	builder->build_taps_real(taps_buffer);
+}
+
 /*
 
 	raptor_filter_ccf
@@ -29,6 +34,11 @@ void raptor_filter_fff::compute(float* result, const float* input, const float* 
 template <>
 void raptor_filter_ccf::compute(raptor_complex* result, const raptor_complex* input, const float* taps, unsigned int num_points) {
 	volk_32fc_32f_dot_prod_32fc(result, input, taps, num_points);
+}
+
+template <>
+void raptor_filter_ccf::set_taps_from_builder(raptor_filter_builder_base* builder) {
+	builder->build_taps_real(taps_buffer);
 }
 
 /*
@@ -46,6 +56,11 @@ void raptor_filter_fcc::compute(raptor_complex* result, const float* input, cons
 	volk_32fc_32f_dot_prod_32fc(result, taps, input, num_points); //we've swapped the taps and the input. apperently that's valid? https://github.com/gnuradio/gnuradio/blob/master/gr-filter/lib/fir_filter.cc#L122
 }
 
+template <>
+void raptor_filter_fcc::set_taps_from_builder(raptor_filter_builder_base* builder) {
+	builder->build_taps_complex(taps_buffer);
+}
+
 /*
 
 	raptor_filter_ccc
@@ -59,4 +74,9 @@ void raptor_filter_fcc::compute(raptor_complex* result, const float* input, cons
 template <>
 void raptor_filter_ccc::compute(raptor_complex* result, const raptor_complex* input, const raptor_complex* taps, unsigned int num_points) {
 	volk_32fc_x2_dot_prod_32fc(result, input, taps, num_points);
+}
+
+template <>
+void raptor_filter_ccc::set_taps_from_builder(raptor_filter_builder_base* builder) {
+	builder->build_taps_complex(taps_buffer);
 }
