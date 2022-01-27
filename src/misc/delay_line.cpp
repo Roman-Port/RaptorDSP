@@ -1,52 +1,93 @@
 #include <raptordsp/misc/delay_line.h>
 #include <cstring>
+#include <cassert>
 
 template<typename T>
-raptor_delay_line<T>::raptor_delay_line(int delay, T defaultValue) {
-    //Allocate the buffer
-    buffer = (T*)malloc(sizeof(T) * delay);
-
-    //Zero out buffer
-    for (int i = 0; i < delay; i++)
-        buffer[i] = defaultValue;
-
-    //Set up vars
-    pos = 0;
-    len = delay;
+raptor_delay_line<T>::raptor_delay_line() :
+    buffer(0),
+    pos(0),
+    len(-1)
+{
 }
 
 template<typename T>
 raptor_delay_line<T>::raptor_delay_line(raptor_delay_line const& src) {
-    len = src.len;
+    //Initialize defaults
+    buffer = src.buffer;
     pos = src.pos;
-    buffer = (T*)malloc(sizeof(T) * len);
-    memcpy(buffer, src.buffer, sizeof(T) * len);
+    len = src.len;
+
+    //If the source has a buffer, copy it to our own
+    if (src.buffer != 0) {
+        //Create
+        buffer = (T*)malloc(sizeof(T) * len);
+        assert(buffer != 0);
+
+        //Copy
+        memcpy(buffer, src.buffer, sizeof(T) * len);
+    }
 }
 
 template<typename T>
 raptor_delay_line<T>::~raptor_delay_line() {
-    free(buffer);
-    buffer = nullptr;
+    //Destroy the old buffer
+    if (buffer != 0) {
+        free(buffer);
+        buffer = 0;
+    }
 }
 
 template<typename T>
-void raptor_delay_line<T>::process_one(T input, T* output) {
-    //Read output
-    *output = buffer[pos];
+void raptor_delay_line<T>::configure(int newDelay, T defaultValue) {
+    //Sanity check
+    assert(newDelay >= 0);
 
-    //Write value in its place
-    buffer[pos] = input;
+    //Only resize buffer if we need to
+    if (len != newDelay || buffer == 0) {
+        //Destroy the old buffer
+        if (buffer != 0) {
+            free(buffer);
+            buffer = 0;
+        }
 
-    //Advance pointer
-    pos = (pos + 1) % len;
+        //Create new buffer if needed
+        if (newDelay > 0) {
+            buffer = (T*)malloc(newDelay * sizeof(T));
+            assert(buffer != 0);
+        }
+    }
+
+    //Reset state
+    len = newDelay;
+    pos = 0;
+
+    //Clear buffer
+    for (int i = 0; i < newDelay; i++)
+        buffer[i] = defaultValue;
 }
 
 template<typename T>
-void raptor_delay_line<T>::process(T* ptr, int count) {
-    T temp;
-    for (int i = 0; i < count; i++) {
-        process_one(ptr[i], &temp);
-        ptr[i] = temp;
+void raptor_delay_line<T>::process(const T* input, T* output, int count) {
+    //Sanity check
+    assert(count >= 0);
+
+    //Check if we need to shortcut this
+    if (len == 0) {
+        //No delay. Just copy
+        memcpy(output, input, sizeof(T) * count);
+    }
+    else {
+        //Sanity check
+        assert(buffer != 0);
+
+        //Process delay
+        T temp;
+        for (int i = 0; i < count; i++) {
+            temp = buffer[pos];
+            buffer[pos++] = input[i];
+            pos %= len;
+            output[i] = temp;
+        }
     }
 }
 
