@@ -2,7 +2,6 @@
 
 #include "../window.h"
 #include "../../defines.h"
-#include <raptordsp/filter/filter_taps.h>
 
 class raptor_filter_builder_base {
 

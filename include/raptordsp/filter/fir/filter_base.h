@@ -1,7 +1,6 @@
 #pragma once
 
 #include <raptordsp/defines.h>
-#include <raptordsp/filter/filter_taps.h>
 #include <raptordsp/filter/builder/builder.h>
 
 template <class IN_T, class OUT_T, class TAP_T>

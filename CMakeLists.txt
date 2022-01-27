@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10.2)
 project("raptordsp")
-set(installhelper_version 0.1.1)
+set(installhelper_version 0.1.2)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 find_package(Volk CONFIG REQUIRED)

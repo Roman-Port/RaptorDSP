@@ -1,5 +1,6 @@
 #include <raptordsp/filter/fir/filter_base.h>
 #include <volk/volk.h>
+#include <cassert>
 
 #define DESTROY_BUFFER(name) if (name != nullptr) { volk_free(name); name = nullptr; }
 #define RECREATE_BUFFER(name, type, count, alignment) DESTROY_BUFFER(name) name = (type*)volk_malloc(sizeof(type) * count, alignment); assert(name != nullptr);
