@@ -75,11 +75,23 @@ void interpolate(const raptor_complex* input, float mu, raptor_complex* output) 
 	//Get the index
 	int step = (int)rint((1 - mu) * NSTEPS);
 
+	//Sanity check
+	assert(step >= 0);
+	assert(step <= NSTEPS);
+
 	//Apply interpolation
 	volk_32fc_32f_dot_prod_32fc(output, input, taps[step], NTAPS);
 }
 
 int raptor_clock_recovery_mm_complex::process(const raptor_complex* inp, int count, raptor_complex* out, int outputCount) {
+	//Ensure all floats are valid. Invalid ones will cause cascading errors
+	for (int i = 0; i < count; i++) {
+		if (isnan(inp[i].real()) || isnan(inp[i].imag())) {
+			printf("RAPTORDSP WARN: clock_recovery_mm_complex fed NaN values!\n");
+			return 0;
+		}
+	}
+
 	//Push into the consumption queue
 	queue.push(inp, count);
 
@@ -120,7 +132,8 @@ int raptor_clock_recovery_mm_complex::process(const raptor_complex* inp, int cou
 		ii += (int)floor(d_mu);
 		d_mu -= floor(d_mu);
 
-		if (ii < 0) // clamp it.  This should only happen with bogus input
+		//Clamp. This should only happen with bogus input
+		if (ii < 0)
 			ii = 0;
 	}
 
